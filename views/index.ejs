@@ -4,31 +4,39 @@
     <form method="POST" action="/posts">
         <label>Title <input name="title" required maxlength="120" /></label>
         <label>Body <textarea name="body" required rows="6"></textarea></label>
-        <button type="submit"></button>
+        <button type="submit">Submit</button>
     </form>
 </section>
 
 <section class="posts-grid">
-    <% if(posts.length === 0) { %>
+    <% if (posts.length===0) { %>
         <p class="muted">No posts yet.</p>
-    <% } %>
-    <% posts.forEach(p => { %>
-        <article class="post-card">
-            <header>
-                <h3><%= p.title %></h3>
-                <p class="meta">Created <%= new Date(p.createdAt).toLocaleString() %>
-                    <% if(p.updatedAt && p.updatedAt !== p.createdAt) { %>
-                        Updated <%= new Date(p.updatedAt).toLocaleString() %>
-                    <% } %>
-                </p>
-            </header>
-            <p><%= p.body %></p>
-            <footer class="actions">
-                <a href="/posts/<% p.id %>/edit">Edit</a>
-                <form method="POST" action="/posts/<%= p.id %>/delete" class="inline">
-                    <button type="submit">Delete</button>
-                </form>
-            </footer>
-        </article>
-    <% }) %>
+        <% } %>
+
+            <% posts.forEach(function(p){ %>
+                <article class="post-card">
+                    <header>
+                        <h3>
+                            <%= p.title %>
+                        </h3>
+                        <p class="meta">
+                            Created <%= new Date(p.createdAt).toLocaleString() %>
+                                <% if (p.updatedAt && p.updatedAt !==p.createdAt) { %>
+                                    • Updated <%= new Date(p.updatedAt).toLocaleString() %>
+                                        <% } %>
+                        </p>
+                    </header>
+
+                    <p>
+                        <%= p.body %>
+                    </p>
+
+                    <footer class="actions">
+                        <a href="/posts/<%= p.id %>/edit">Edit</a>
+                        <form method="POST" action="/posts/<%= p.id %>/delete" class="inline">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </footer>
+                </article>
+                <% }) %>
 </section>

@@ -14,9 +14,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let posts = [];
 
+const render = (res, view, params = {}) => {
+    const ejs = require('ejs');
+    const fs = require('fs');
+    const path = require('path');
+    const viewPath = path.join(__dirname, 'views', `${view}.ejs`);
+    const body = ejs.render(fs.readFileSync(viewPath, 'utf8'), params, { filename: viewPath });
+    res.render('layout', { ...params, body });
+}
+
 app.get('/', (req, res) => {
-    res.render('index', { posts });
+    render(res, 'index',{ title: 'Home • Capstone Blog', posts });
 });
+
+app.get('/posts/:id/edit', (req, res) => {
+    const post = posts.find(p => p.id === req.params.id);
+    if(!post){
+        return res.status(404).send('Not found');
+    }
+    render(res, 'edit', { title: 'Edit • Capstone Blog', post });
+})
 
 app.post('/posts', (req, res) => {
     const title = (req.body.title || '').trim();
@@ -29,4 +46,25 @@ app.post('/posts', (req, res) => {
     res.redirect('/');
 });
 
-app.listen(PORT, () => console.log(`https://localhost:${PORT}`));
+app.post('/posts/:id/update', (req, res) => {
+    const post = posts.find(p => p.id === req.params.id);
+    if(!post) {
+        return res.status(404).send('Not found');
+    }
+    const title = (req.body.title || '').trim();
+    const body = (req.body.body || '').trim();
+    if(!title || !body) {
+        return res.status(400).send('Title and body required');
+    }
+    post.title = title;
+    post.body = body;
+    post.updatedAt = Date.now();
+    res.redirect('/');
+});
+
+app.post('/posts/:id/delete', (req, res) => {
+    posts = posts.filter(p => p.id !== req.params.id);
+    res.redirect('/');
+});
+
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
