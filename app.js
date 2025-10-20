@@ -14,6 +14,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let posts = [];
 
+const MAX_TITLE = 120;
+const MAX_BODY  = 5000;
+
+function validatePostInput(titleRaw, bodyRaw) {
+  const title = (titleRaw || '').trim();
+  const body  = (bodyRaw  || '').trim();
+
+  if (!title || !body) {
+    return { ok: false, msg: 'Title and body are required.' };
+  }
+
+  if (title.length > MAX_TITLE)  {
+    return { ok: false, msg: `Title too long (>${MAX_TITLE}).` };
+  }
+
+  if (body.length  > MAX_BODY){
+    return { ok: false, msg: `Body too long (>${MAX_BODY}).` };
+  }
+
+  return { ok: true, title, body };
+}
+
 const render = (res, view, params = {}) => {
     const ejs = require('ejs');
     const fs = require('fs');

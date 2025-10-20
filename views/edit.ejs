@@ -1,6 +1,6 @@
 <section class="compose-card">
     <h2>Edit Post</h2>
-    <form method="POST" action="/posts/<%= post.id %>/">
+    <form method="POST" action="/posts/<%= post.id %>/update">
         <label>Title <input name="title" required maxlength="120" value="<%= post.title %>" /></label>
         <label>Body <textarea name="body" required rows="8"><%= post.body %></textarea></label>
         <div class="actions">
