@@ -24,7 +24,7 @@
             </header>
             <p><%= p.body %></p>
             <footer class="actions">
-                <a href="/posts/<% p,id %>/edit">Edit</a>
+                <a href="/posts/<% p.id %>/edit">Edit</a>
                 <form method="POST" action="/posts/<%= p.id %>/delete" class="inline">
                     <button type="submit">Delete</button>
                 </form>
