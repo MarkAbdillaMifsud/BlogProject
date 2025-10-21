@@ -8,35 +8,43 @@
     </form>
 </section>
 
+<section class="toolbar">
+    <input type="search" id="search" placeholder="Filter posts..." aria-label="Filter posts">
+</section>
+
 <section class="posts-grid">
     <% if (posts.length===0) { %>
         <p class="muted">No posts yet.</p>
         <% } %>
 
-            <% posts.forEach(function(p){ %>
-                <article class="post-card">
-                    <header>
-                        <h3>
-                            <%= p.title %>
-                        </h3>
-                        <p class="meta">
-                            Created <%= new Date(p.createdAt).toLocaleString() %>
-                                <% if (p.updatedAt && p.updatedAt !==p.createdAt) { %>
-                                    • Updated <%= new Date(p.updatedAt).toLocaleString() %>
-                                        <% } %>
-                        </p>
-                    </header>
+    <% posts.forEach(function(p){ %>
+        <article class="post-card" id="post-<%= p.id %>" data-title="<%= p.title %>" data-body="<%= p.body %>">
+            <header>
+                <h3>
+                    <%= p.title %>
+                    <button type="button" class="copy-link" data-anchor="post-<%= p.id %>" title="Copy link" aria-label="Copy link">#</button>
+                </h3>
+                <p class="meta">
+                    Created <%= new Date(p.createdAt).toLocaleString() %>
+                    <% if (p.updatedAt && p.updatedAt !==p.createdAt) { %>
+                        • Updated <%= new Date(p.updatedAt).toLocaleString() %>
+                    <% } %>
+                </p>
+            </header>
+            
+            <div class="post-body" data-collapsed="true">
+                <p class="body-text">
+                    <%= p.body %>
+                </p>
+            </div>
 
-                    <p>
-                        <%= p.body %>
-                    </p>
-
-                    <footer class="actions">
-                        <a href="/posts/<%= p.id %>/edit">Edit</a>
-                        <form method="POST" action="/posts/<%= p.id %>/delete" class="inline">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </footer>
-                </article>
-                <% }) %>
+            <footer class="actions">
+                <button type="button" class="toggle-body" aria-expanded="false">Show more</button>
+                <a href="/posts/<%= p.id %>/edit">Edit</a>
+                <form method="POST" action="/posts/<%= p.id %>/delete" class="inline">
+                    <button type="submit">Delete</button>
+                </form>
+            </footer>
+        </article>
+    <% }) %>
 </section>
